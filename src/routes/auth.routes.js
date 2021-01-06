@@ -70,14 +70,14 @@ router.post('/register', async (req, res) => {
 	if ([email, password].some((_) => _ == null)) {
 		return res.status(400).json({
 			error: true,
-			reason: 'Both "email" and "password" fields must be defined',
+			reason: 'Both email and password fields must be defined',
 		});
 	}
 
 	if ([email, password].some((_) => _.length < 3)) {
 		return res.status(400).json({
 			error: true,
-			reason: 'Both "email" and "password" must be at least 3 characters',
+			reason: 'Both email and password must be at least 3 characters',
 		});
 	}
 
