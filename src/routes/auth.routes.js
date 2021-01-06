@@ -144,4 +144,25 @@ router.post('/authorized-emails', isAdmin, async (req, res) => {
 	}
 });
 
+router.delete('/authorized-emails/:email', isAdmin, async (req, res) => {
+	const { email } = req.params;
+
+	if (!IsEmail.validate(email)) {
+		return res.status(400).json({
+			error: true,
+			reason: `Email address ${email} is invalid`,
+		});
+	}
+
+	try {
+		await UserService.deleteAuthorizedEmail(email);
+		return res.status(204).send();
+	} catch (err) {
+		return res.status(500).json({
+			error: true,
+			reason: 'Internal server error',
+		});
+	}
+});
+
 module.exports = router;

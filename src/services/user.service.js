@@ -32,9 +32,15 @@ class UserService {
 		});
 	}
 
-	static async addAuthorizedEmail(email, role) {
-		return await prisma.authorizedEmails.create({
+	static addAuthorizedEmail(email, role) {
+		return prisma.authorizedEmails.create({
 			data: { email, role },
+		});
+	}
+
+	static deleteAuthorizedEmail(email) {
+		return prisma.authorizedEmails.delete({
+			where: { email },
 		});
 	}
 }
