@@ -31,6 +31,12 @@ class UserService {
 			},
 		});
 	}
+
+	static async addAuthorizedEmail(email, role) {
+		return await prisma.authorizedEmails.create({
+			data: { email, role },
+		});
+	}
 }
 
 module.exports = UserService;

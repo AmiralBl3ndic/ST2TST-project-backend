@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const IsEmail = require('isemail');
 const UserService = require('../services/user.service');
+const isAdmin = require('../auth/is-admin.middleware');
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
 	return res.status(200).json({
@@ -92,6 +93,55 @@ router.get('/logout', (req, res) => {
 		error: false,
 		message: 'Logged out',
 	});
+});
+
+router.post('/authorized-emails', isAdmin, async (req, res) => {
+	const { email, role } = req.body;
+
+	if ([email, role].some((x) => !x)) {
+		return res.status(400).json({
+			error: true,
+			reason: 'Both email and role fields must be set',
+		});
+	}
+
+	if (!IsEmail.validate(email)) {
+		return res.status(400).json({
+			error: true,
+			reason: `Email address ${email} is invalid`,
+		});
+	}
+
+	if (!['ADMIN', 'EMPLOYEE', 'VISITOR'].some((r) => r === role)) {
+		return res.status(400).json({
+			error: true,
+			reason: 'role field must be either ADMIN, EMPLOYEE or VISITOR',
+		});
+	}
+
+	try {
+		await UserService.addAuthorizedEmail(email, role);
+
+		return res.status(201).json({
+			error: false,
+			authorized: {
+				email,
+				role,
+			},
+		});
+	} catch (err) {
+		if (err.code && err.code === 'P2002') {
+			return res.status(409).json({
+				error: true,
+				reason: `Email ${email} is already authorized`,
+			});
+		}
+
+		return res.status(500).json({
+			error: true,
+			reason: 'Internal server error',
+		});
+	}
 });
 
 module.exports = router;
