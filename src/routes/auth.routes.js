@@ -6,6 +6,7 @@ const UserService = require('../services/user.service');
 router.post('/login', passport.authenticate('local'), (req, res) => {
 	return res.status(200).json({
 		error: false,
+		message: 'Logged in',
 		user: {
 			email: req.user.email,
 			role: req.user.role,
@@ -38,7 +39,22 @@ router.post('/register', async (req, res) => {
 	}
 
 	try {
-		const createdUser = await UserService.createUser(email, password);
+		const authorizedEmailsRecord = await UserService.getAuthorizedEmailRecord(
+			email
+		);
+
+		if (!authorizedEmailsRecord) {
+			return res.status(403).json({
+				error: true,
+				reason: 'Unauthorized email address',
+			});
+		}
+
+		const createdUser = await UserService.createUser(
+			email,
+			password,
+			authorizedEmailsRecord.role
+		);
 
 		if (!createdUser) {
 			return res.status(500).json({
@@ -68,6 +84,14 @@ router.post('/register', async (req, res) => {
 			reason: 'Internal server error',
 		});
 	}
+});
+
+router.get('/logout', (req, res) => {
+	req.logout();
+	return res.status(200).json({
+		error: false,
+		message: 'Logged out',
+	});
 });
 
 module.exports = router;

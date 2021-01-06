@@ -14,6 +14,7 @@ passport.deserializeUser(async (id, done) => {
 	const user = await UserService.findById(id);
 
 	if (!user) return done(null, false);
+	delete user.password;
 	return done(null, user);
 });
 

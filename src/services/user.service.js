@@ -16,6 +16,12 @@ class UserService {
 		return argon2.hash(password);
 	}
 
+	static getAuthorizedEmailRecord(email) {
+		return prisma.authorizedEmails.findUnique({
+			where: { email },
+		});
+	}
+
 	static async createUser(email, password, role = 'VISITOR') {
 		return prisma.users.create({
 			data: {

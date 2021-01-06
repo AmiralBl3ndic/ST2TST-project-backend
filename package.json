@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "db:reset": "sqlite3 prisma/data/database.db < prisma/set_db.sql"
+    "db:reset": "sqlite3 prisma/data/database.db < prisma/set_db.sql && prisma introspect && prisma generate"
   },
   "dependencies": {
     "@prisma/client": "2.14.0",

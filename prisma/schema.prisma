@@ -13,3 +13,9 @@ model Users {
   password String?
   role     String
 }
+
+model AuthorizedEmails {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  role  String
+}
