@@ -32,6 +32,10 @@ class UserService {
 		});
 	}
 
+	static getAuthorizedEmails() {
+		return prisma.authorizedEmails.findMany();
+	}
+
 	static addAuthorizedEmail(email, role) {
 		return prisma.authorizedEmails.create({
 			data: { email, role },

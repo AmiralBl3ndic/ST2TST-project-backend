@@ -95,6 +95,22 @@ router.get('/logout', (req, res) => {
 	});
 });
 
+////////////////////////////////////////////////////////////
+// Authorized emails
+////////////////////////////////////////////////////////////
+
+router.get('/authorized-emails', isAdmin, async (req, res) => {
+	try {
+		return res.status(200).json(await UserService.getAuthorizedEmails());
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({
+			error: true,
+			reason: 'Internal server error',
+		});
+	}
+});
+
 router.post('/authorized-emails', isAdmin, async (req, res) => {
 	const { email, role } = req.body;
 
