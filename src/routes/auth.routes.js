@@ -3,6 +3,16 @@ const passport = require('passport');
 const IsEmail = require('isemail');
 const UserService = require('../services/user.service');
 
+router.post('/login', passport.authenticate('local'), (req, res) => {
+	return res.status(200).json({
+		error: false,
+		user: {
+			email: req.user.email,
+			role: req.user.role,
+		},
+	});
+});
+
 router.post('/register', async (req, res) => {
 	const { email, password } = req.body;
 
@@ -39,7 +49,10 @@ router.post('/register', async (req, res) => {
 
 		return res.status(201).json({
 			error: false,
-			user: createdUser,
+			user: {
+				email: createdUser.email,
+				role: createdUser.role,
+			},
 		});
 	} catch (err) {
 		// If email already being used
@@ -56,7 +69,5 @@ router.post('/register', async (req, res) => {
 		});
 	}
 });
-
-router.post('/login', passport.authenticate('local'));
 
 module.exports = router;

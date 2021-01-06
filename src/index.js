@@ -5,8 +5,17 @@ const passport = require('passport');
 const cors = require('cors');
 const LocalStrategy = require('./auth/local.strategy');
 const apiRoutes = require('./routes/api.routes');
+const UserService = require('./services/user.service');
 
 const app = express();
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+	const user = await UserService.findById(id);
+
+	if (!user) return done(null, false);
+	return done(null, user);
+});
 
 app.use(cors());
 app.use(
