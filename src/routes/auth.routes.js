@@ -2,7 +2,56 @@ const router = require('express').Router();
 const passport = require('passport');
 const IsEmail = require('isemail');
 const UserService = require('../services/user.service');
+const isAuthenticated = require('../auth/is-authenticated.middleware');
 const isAdmin = require('../auth/is-admin.middleware');
+
+////////////////////////////////////////////////////////////
+// Currently authenticated user
+////////////////////////////////////////////////////////////
+
+router.get('/me', isAuthenticated, (req, res) => {
+	return res.status(200).json({
+		error: false,
+		user: req.user,
+	});
+});
+
+////////////////////////////////////////////////////////////
+// Change password
+////////////////////////////////////////////////////////////
+
+router.put('/me/password', isAuthenticated, async (req, res) => {
+	const { oldPassword, newPassword } = req.body || {};
+
+	if (!oldPassword || !newPassword) {
+		return res.status(400).json({
+			error: true,
+			reason: 'oldPassword and newPassword fields must be set',
+		});
+	}
+
+	if (newPassword.length < 3) {
+		return res.status(400).json({
+			error: true,
+			reason: 'New password must be at least 3 characters long',
+		});
+	}
+
+	try {
+		await UserService.updatePassword(req.user.email, oldPassword, newPassword);
+		return res.status(204).send();
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({
+			error: true,
+			reason: 'Internal server error',
+		});
+	}
+});
+
+////////////////////////////////////////////////////////////
+// Login / Register
+////////////////////////////////////////////////////////////
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
 	return res.status(200).json({

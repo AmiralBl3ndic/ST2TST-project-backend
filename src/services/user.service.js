@@ -32,6 +32,22 @@ class UserService {
 		});
 	}
 
+	static async passwordMatch(hash, password) {
+		return argon2.verify(hash, password);
+	}
+
+	static async updatePassword(email, oldPassword, newPassword) {
+		const userRecord = await UserService.findByEmail(email);
+		if (!userRecord) throw new Error('User not found');
+
+		if (await UserService.passwordMatch(userRecord.password, oldPassword)) {
+			await prisma.users.update({
+				where: { email },
+				data: { password: await UserService.hashPassword(newPassword) },
+			});
+		}
+	}
+
 	static getAuthorizedEmails() {
 		return prisma.authorizedEmails.findMany();
 	}
