@@ -1,0 +1,22 @@
+{
+  "name": "st2tst-backend-project",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": "AmiralBl3ndic <camille.briand@efrei.net>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "db:reset": "sqlite3 prisma/data/database.db < prisma/set_db.sql"
+  },
+  "dependencies": {
+    "@prisma/client": "2.14.0",
+    "argon2": "^0.27.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.14.0"
+  }
+}
