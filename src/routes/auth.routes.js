@@ -112,10 +112,10 @@ router.post('/authorized-emails', isAdmin, async (req, res) => {
 		});
 	}
 
-	if (!['ADMIN', 'EMPLOYEE', 'VISITOR'].some((r) => r === role)) {
+	if (!['ADMIN', 'EMPLOYEE'].some((r) => r === role)) {
 		return res.status(400).json({
 			error: true,
-			reason: 'role field must be either ADMIN, EMPLOYEE or VISITOR',
+			reason: 'role field must be either ADMIN or EMPLOYEE',
 		});
 	}
 

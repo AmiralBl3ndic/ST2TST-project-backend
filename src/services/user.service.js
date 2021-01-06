@@ -22,7 +22,7 @@ class UserService {
 		});
 	}
 
-	static async createUser(email, password, role = 'VISITOR') {
+	static async createUser(email, password, role) {
 		return prisma.users.create({
 			data: {
 				email,
