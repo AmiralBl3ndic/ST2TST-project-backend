@@ -6,17 +6,25 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "db:reset": "sqlite3 prisma/data/database.db < prisma/set_db.sql"
   },
   "dependencies": {
     "@prisma/client": "2.14.0",
     "argon2": "^0.27.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "@prisma/cli": "2.14.0"
+    "@prisma/cli": "2.14.0",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
   }
 }

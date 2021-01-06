@@ -3,5 +3,6 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Users(
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "email" TEXT UNIQUE NOT NULL,
+    "password" TEXT,
     "role" TEXT NOT NULL
 );
