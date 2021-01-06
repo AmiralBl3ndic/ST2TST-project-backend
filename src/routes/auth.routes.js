@@ -144,6 +144,35 @@ router.post('/authorized-emails', isAdmin, async (req, res) => {
 	}
 });
 
+router.put('/authorized-emails/:email', isAdmin, async (req, res) => {
+	const { email } = req.params;
+	const { role } = req.body;
+
+	if (!IsEmail.validate(email)) {
+		return res.status(400).json({
+			error: true,
+			reason: `Email address ${email} is invalid`,
+		});
+	}
+
+	if (!['ADMIN', 'EMPLOYEE'].some((r) => r === role)) {
+		return res.status(400).json({
+			error: true,
+			reason: 'role field must be either ADMIN or EMPLOYEE',
+		});
+	}
+
+	try {
+		await UserService.updateAuthorizedEmailRole(email, role);
+		return res.status(204).send();
+	} catch (err) {
+		return res.status(500).json({
+			error: true,
+			reason: 'Internal server error',
+		});
+	}
+});
+
 router.delete('/authorized-emails/:email', isAdmin, async (req, res) => {
 	const { email } = req.params;
 

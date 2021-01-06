@@ -43,6 +43,13 @@ class UserService {
 			where: { email },
 		});
 	}
+
+	static updateAuthorizedEmailRole(email, role) {
+		return prisma.authorizedEmails.update({
+			where: { email },
+			data: { role },
+		});
+	}
 }
 
 module.exports = UserService;
